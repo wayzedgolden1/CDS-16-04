@@ -1,0 +1,164 @@
+{
+    "users": {
+        "nguyendat": {
+            "username": "nguyendat",
+            "password_hash": "scrypt:32768:8:1$vkKlDBamAz6vOS9a$e6e459c48b4b90663b41c42ead3561c24ee1ca83dedefca11c9dbe18c3f684319ab4e82c6a70ddf13b092e20893e0ac05ef876c4d68d12acf2366f52832cb6da",
+            "profile": {
+                "name": "Nguyen Dat",
+                "gender": "nam",
+                "age": 21,
+                "height_cm": 165.0,
+                "weight_kg": 65.0,
+                "activity_level": "ít",
+                "goal": "giảm cân",
+                "tdee": 1898,
+                "target_calories": 1398
+            },
+            "food_log": [
+                {
+                    "timestamp": "2025-10-17T06:54:52",
+                    "date": "2025-10-17",
+                    "meal_name": "Đĩa bữa sáng kiểu Mỹ đầy đủ",
+                    "calories": 1300,
+                    "description": "Món ăn bao gồm một chồng bánh pancake (khoảng 5-6 chiếc) được rưới siro lá phong và phủ một miếng bơ nhỏ, hai quả trứng ốp la lòng đào, vài lát thịt xông khói chiên giòn, cùng với trái cây tươi gồm kiwi cắt lát và một chùm nho."
+                },
+                {
+                    "timestamp": "2025-11-11T14:23:21",
+                    "date": "2025-11-11",
+                    "meal_name": "Rau muống xào tỏi",
+                    "calories": 200,
+                    "description": "Thành phần chính gồm rau muống, tỏi băm, dầu ăn và các gia vị thông thường như nước mắm, muối. Món ăn được chế biến bằng phương pháp xào nhanh."
+                },
+                {
+                    "timestamp": "2025-11-07T00:08:00",
+                    "date": "2025-11-07",
+                    "meal_name": "Bữa sáng tổng hợp kiểu Mỹ",
+                    "calories": 1150,
+                    "description": "Món ăn sáng kiểu Mỹ thịnh soạn gồm một chồng bánh pancake mềm mịn với bơ và siro, hai quả trứng ốp la, thịt xông khói giòn rụm, kèm theo kiwi tươi và nho.",
+                    "nutrition_analysis": "Món ăn cung cấp năng lượng dồi dào từ carbohydrate (bánh pancake, siro, trái cây), protein chất lượng cao và chất béo lành mạnh (trứng), cùng với protein và chất béo bão hòa từ thịt xông khói. Trái cây bổ sung vitamin, khoáng chất và chất xơ."
+                },
+                {
+                    "timestamp": "2025-11-12T03:57:31.622699+07:00",
+                    "date": "2025-11-12",
+                    "meal_name": "Bánh Xèo (Bánh Xèo miền Tây)",
+                    "calories": 480,
+                    "description": "Món bánh xèo nhỏ với vỏ bánh màu vàng nghệ giòn rụm, được chiên trong chảo. Nhân bánh gồm tôm tươi và giá đỗ, ăn kèm với nhiều loại rau sống như xà lách, rau thơm và nước chấm chua ngọt.",
+                    "nutrition_analysis": "Cung cấp chủ yếu tinh bột từ bột gạo trong vỏ bánh, chất đạm từ tôm và một lượng đáng kể chất béo từ dầu chiên cùng nước cốt dừa (thường có trong bột bánh). Các loại rau sống và giá đỗ bổ sung chất xơ, vitamin và khoáng chất."
+                },
+                {
+                    "timestamp": "2025-11-12T04:02:32.482191+07:00",
+                    "date": "2025-11-12",
+                    "meal_name": "Bữa sáng thập cẩm kiểu Mỹ",
+                    "calories": 1350,
+                    "description": "Món bữa sáng đầy đủ với một chồng pancake mềm mịn phủ bơ và si-rô, ăn kèm hai quả trứng ốp la, thịt xông khói giòn rụm, và trái cây tươi (kiwi, nho).",
+                    "nutrition_analysis": "Bữa ăn cung cấp đa dạng các nhóm chất: tinh bột và đường (chủ yếu từ pancake, si-rô), protein và chất béo (từ trứng, thịt xông khói). Đặc biệt, thịt xông khói cung cấp nhiều chất béo bão hòa và natri. Trái cây tươi như kiwi và nho bổ sung vitamin (đặc biệt là Vitamin C), khoáng chất và chất xơ."
+                },
+                {
+                    "timestamp": "2025-11-06T09:02:00+07:00",
+                    "date": "2025-11-06",
+                    "meal_name": "Cá chiên giòn",
+                    "calories": 600,
+                    "description": "Cá được chiên nguyên con cho đến khi lớp da bên ngoài vàng giòn rụm, thường được rắc thêm tỏi phi và rau thơm (như ngò rí) để tăng hương vị. Đây là món ăn phổ biến trong bữa cơm gia đình, thường được dùng kèm với cơm trắng và nước chấm.",
+                    "nutrition_analysis": "Món ăn này cung cấp một lượng protein dồi dào từ cá, rất cần thiết cho việc xây dựng và sửa chữa cơ bắp. Cá cũng là nguồn cung cấp các vitamin nhóm B, phốt pho, selen và các axit béo omega-3 có lợi cho tim mạch (mặc dù một phần có thể bị giảm do nhiệt độ cao khi chiên). Tuy nhiên, do phương pháp chiên ngập dầu, món ăn này có lượng chất béo và calo tương đối cao. Lượng chất béo chủ yếu đến từ dầu ăn thấm vào cá trong quá trình chiên."
+                },
+                {
+                    "timestamp": "2025-11-05T21:04:00+07:00",
+                    "date": "2025-11-05",
+                    "meal_name": "Gỏi cuốn Tôm",
+                    "calories": 250,
+                    "description": "Gỏi cuốn tôm tươi, được cuộn trong bánh tráng mỏng với bún, rau sống và thịt tôm đỏ au, ăn kèm nước chấm chua ngọt rắc đậu phộng.",
+                    "nutrition_analysis": "Món ăn cung cấp tinh bột từ bánh tráng và bún, protein nạc dồi dào từ tôm. Rau sống và rau xà lách bổ sung vitamin, khoáng chất và chất xơ. Nước chấm có thể chứa đường, muối và một ít chất béo từ đậu phộng."
+                },
+                {
+                    "timestamp": "2025-11-04T23:05:00+07:00",
+                    "date": "2025-11-04",
+                    "meal_name": "Bữa sáng Pancake, Trứng và Thịt xông khói",
+                    "calories": 1350,
+                    "description": "Bữa sáng thịnh soạn với chồng bánh pancake mềm mại phủ bơ và siro ngọt ngào, đi kèm hai quả trứng ốp la (sunny-side up), thịt xông khói giòn rụm, và trái cây tươi (nho, kiwi) để cân bằng hương vị và dinh dưỡng.",
+                    "nutrition_analysis": "Món ăn này cung cấp nguồn năng lượng dồi dào, chủ yếu từ tinh bột (bánh pancake, siro) và chất béo (bơ, thịt xông khói). Trứng là nguồn protein chất lượng cao và các vitamin thiết yếu. Thịt xông khói bổ sung protein và chất béo, nhưng cũng chứa nhiều natri. Trái cây tươi (kiwi, nho) cung cấp vitamin, khoáng chất, chất xơ và đường tự nhiên, giúp bổ sung dinh dưỡng và cân bằng bữa ăn giàu calo và chất béo này."
+                },
+                {
+                    "timestamp": "2025-11-08T20:06:00+07:00",
+                    "date": "2025-11-08",
+                    "meal_name": "Gỏi Cuốn Tôm",
+                    "calories": 350,
+                    "description": "Hai cuộn gỏi tươi mát với tôm luộc hồng, bún tươi và rau xà lách được cuốn trong bánh tráng mỏng. Món ăn kèm với nước chấm chua ngọt có rắc đậu phộng rang.",
+                    "nutrition_analysis": "Món ăn cung cấp protein dồi dào từ tôm, tinh bột từ bánh tráng và bún tươi, cùng chất xơ, vitamin và khoáng chất từ các loại rau xanh tươi mát. Nước chấm chua ngọt có thể bổ sung thêm đường, muối và một lượng nhỏ chất béo từ đậu phộng."
+                },
+                {
+                    "timestamp": "2025-11-09T08:06:00+07:00",
+                    "date": "2025-11-09",
+                    "meal_name": "Rau Muống Xào Tỏi",
+                    "calories": 250,
+                    "description": "Rau muống xanh tươi được xào nhanh với tỏi băm, giữ được độ giòn ngon và màu sắc tự nhiên. Món ăn có hương vị tỏi thơm lừng đặc trưng, thường được dùng làm món rau ăn kèm trong các bữa cơm Việt.",
+                    "nutrition_analysis": "Món ăn này rất giàu chất xơ, vitamin A và C, cùng các khoáng chất như sắt và canxi từ rau muống. Dầu ăn dùng để xào cung cấp năng lượng và một lượng chất béo, trong khi tỏi bổ sung hương vị và các hợp chất có lợi cho sức khỏe. Đây là một lựa chọn lành mạnh, ít calo (nếu kiểm soát lượng dầu) và hỗ trợ tiêu hóa tốt."
+                },
+                {
+                    "timestamp": "2025-11-10T11:08:00+07:00",
+                    "date": "2025-11-10",
+                    "meal_name": "Bữa sáng kiểu Mỹ đầy đủ",
+                    "calories": 980,
+                    "description": "Bữa sáng thịnh soạn gồm một chồng bánh pancake vàng ươm phủ bơ và si-rô, hai quả trứng ốp la lòng đào, những miếng thịt xông khói giòn rụm, kèm theo trái cây tươi như kiwi thái lát và nho.",
+                    "nutrition_analysis": "Món ăn này cung cấp đa dạng carbohydrate từ bánh pancake và trái cây, protein chất lượng cao từ trứng và thịt xông khói, cùng với chất béo từ bơ, thịt xông khói và lòng đỏ trứng. Trái cây tươi bổ sung vitamin C và chất xơ. Tuy nhiên, đây là một bữa ăn khá giàu năng lượng, chứa lượng đáng kể chất béo bão hòa và natri từ thịt xông khói và bơ, cũng như đường bổ sung từ si-rô."
+                }
+            ]
+        },
+        "nguyenanh": {
+            "username": "nguyenanh",
+            "password_hash": "scrypt:32768:8:1$Rz9xmyq0BU8QTFLB$c71a4ee231e5fe13f1aeb3baf18cd174f91dc88324f17880fe6d3746efc15f90ac918b6f4deb6c897722a0df7f696a135de594d315e966cf6f2b756f782d612a",
+            "profile": {
+                "name": "Nguyen Anh",
+                "gender": "nữ",
+                "age": 20,
+                "height_cm": 155.0,
+                "weight_kg": 35.0,
+                "activity_level": "bình thường",
+                "goal": "tăng cân",
+                "tdee": 1640,
+                "target_calories": 2140
+            },
+            "food_log": [
+                {
+                    "timestamp": "2025-11-11T18:20:40.927278+00:00",
+                    "date": "2025-11-11",
+                    "meal_name": "Cá chiên giòn",
+                    "calories": 750,
+                    "description": "Món cá nguyên con được chiên vàng giòn rụm, thường là cá diêu hồng hoặc cá rô phi. Bề mặt cá được phủ một lớp tỏi/hành phi thơm và rau thơm cắt nhỏ, tạo mùi vị hấp dẫn. Thường được ăn kèm với cơm trắng và nước chấm chua ngọt.",
+                    "nutrition_analysis": "Món ăn giàu protein chất lượng cao từ cá, là nguồn cung cấp axit amin thiết yếu. Tuy nhiên, do phương pháp chiên ngập dầu, món ăn có hàm lượng chất béo và calo khá cao (chủ yếu từ dầu ăn). Cá cũng cung cấp các vitamin nhóm B, phốt pho, và selen."
+                },
+                {
+                    "timestamp": "2025-11-11T18:22:41.150288+00:00",
+                    "date": "2025-11-11",
+                    "meal_name": "Rau Muống Xào Tỏi",
+                    "calories": 180,
+                    "description": "Rau muống tươi xanh được xào nhanh với tỏi băm nhỏ, giữ được độ giòn ngon và màu sắc hấp dẫn. Món ăn này thường được dùng kèm trong bữa cơm gia đình.",
+                    "nutrition_analysis": "Món ăn giàu chất xơ, vitamin A, C và các khoáng chất như sắt từ rau muống. Cung cấp một lượng nhỏ chất béo từ dầu ăn dùng để xào và các hợp chất có lợi từ tỏi. Đây là lựa chọn tốt để bổ sung rau xanh vào chế độ ăn, hỗ trợ tiêu hóa và cung cấp dưỡng chất thiết yếu."
+                },
+                {
+                    "timestamp": "2025-11-11T18:27:49.398605+00:00",
+                    "date": "2025-11-11",
+                    "meal_name": "Gỏi Cuốn Tôm",
+                    "calories": 250,
+                    "description": "Gỏi cuốn tôm tươi, được gói trong bánh tráng mỏng, nhân tôm luộc, rau sống (xà lách, hẹ) và bún tươi, ăn kèm nước chấm đậu phộng hoặc nước mắm chua ngọt.",
+                    "nutrition_analysis": "Món ăn cung cấp protein nạc từ tôm, tinh bột từ bánh tráng và bún. Giàu chất xơ và vitamin từ rau sống. Nước chấm đậu phộng bổ sung thêm chất béo không bão hòa đơn và protein thực vật. Đây là một món ăn tươi mát, ít calo và lành mạnh, phù hợp cho bữa ăn nhẹ hoặc khai vị."
+                },
+                {
+                    "timestamp": "2025-11-12T01:36:01.517082+07:00",
+                    "date": "2025-11-12",
+                    "meal_name": "Gỏi Cuốn Tôm",
+                    "calories": 300,
+                    "description": "Món gỏi cuốn tươi mát với tôm luộc, bún, rau xà lách và lá hẹ (hoặc húng quế) được gói khéo léo trong bánh tráng mỏng. Món ăn thanh đạm và giòn mát, thường dùng làm khai vị hoặc bữa ăn nhẹ. Kèm theo là chén nước chấm đậu phộng sánh mịn hoặc nước mắm chua ngọt.",
+                    "nutrition_analysis": "Món ăn cung cấp protein nạc từ tôm, tinh bột từ bánh tráng và bún, cùng với chất xơ, vitamin và khoáng chất từ các loại rau sống. Nước chấm đậu phộng bổ sung thêm chất béo (từ đậu phộng) và một lượng nhỏ đường, góp phần tạo hương vị đậm đà và cung cấp năng lượng."
+                },
+                {
+                    "timestamp": "2025-11-09T13:36:00+07:00",
+                    "date": "2025-11-09",
+                    "meal_name": "Bữa sáng kiểu Mỹ thịnh soạn (Pancakes, Trứng ốp la, Thịt xông khói và trái cây)",
+                    "calories": 950,
+                    "description": "Một đĩa bữa sáng đầy đủ kiểu Mỹ bao gồm một chồng bánh pancake mềm mịn phủ bơ và siro cây phong, hai quả trứng ốp la lòng đào, vài lát thịt xông khói giòn rụm, cùng với trái cây tươi gồm kiwi cắt lát và nho.",
+                    "nutrition_analysis": "Bữa ăn cung cấp đa dạng chất dinh dưỡng: tinh bột và đường từ bánh pancake và siro (nguồn năng lượng chính), protein và chất béo từ trứng và thịt xông khói (quan trọng cho xây dựng cơ bắp và cảm giác no). Trái cây tươi (kiwi, nho) bổ sung vitamin, khoáng chất và chất xơ. Tuy nhiên, bữa ăn này cũng chứa lượng calo, chất béo bão hòa (từ bơ, thịt xông khói) và đường (từ siro) khá cao."
+                }
+            ]
+        }
+    }
+}

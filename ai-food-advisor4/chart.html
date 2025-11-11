@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/style.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <title>Biểu Đồ Dinh Dưỡng - AI Advisor</title>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="/">🍎 AI Food Advisor</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="/">🏠 Trang Chủ</a></li>
+                    <li class="nav-item login-required"><a class="nav-link" href="/profile">👤 Hồ Sơ</a></li>
+                    <li class="nav-item login-required"><a class="nav-link active fw-bold" href="/chart">📊 Biểu Đồ</a></li>
+                    <li class="nav-item login-required"><a class="nav-link" href="/log">📝 Nhật Ký</a></li>
+                    <li class="nav-item" id="auth-nav-item"><a class="nav-link" href="/auth" id="auth-link">🔐 Đăng Nhập/Đăng Ký</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container my-5">
+        <h1 class="mb-4 text-center text-white fw-bold fade-in">📊 Phân Tích Dinh Dưỡng</h1>
+        
+        <div class="row g-4">
+            <!-- Biểu đồ calories theo ngày -->
+            <div class="col-12">
+                <div class="card animated-card">
+                    <div class="card-header gradient-food text-white">
+                        <h4 class="mb-0 fw-bold">📈 Calories Theo Ngày</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="period-selector">
+                            <button class="period-btn active" data-period="7">7 Ngày</button>
+                            <button class="period-btn" data-period="14">14 Ngày</button>
+                            <button class="period-btn" data-period="30">30 Ngày</button>
+                        </div>
+                        
+                        <div class="chart-container">
+                            <canvas id="caloriesChart"></canvas>
+                        </div>
+                        
+                        <div class="mt-3 text-center">
+                            <div class="nutrition-fact">
+                                <div class="row text-center">
+                                    <div class="col-4">
+                                        <div class="text-primary fw-bold fs-4" id="avg-calories">0</div>
+                                        <small>Trung bình/ngày</small>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="text-success fw-bold fs-4" id="max-calories">0</div>
+                                        <small>Cao nhất</small>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="text-warning fw-bold fs-4" id="min-calories">0</div>
+                                        <small>Thấp nhất</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Biểu đồ so sánh mục tiêu -->
+            <div class="col-md-6">
+                <div class="card animated-card h-100">
+                    <div class="card-header gradient-primary text-white">
+                        <h4 class="mb-0 fw-bold">🎯 Tiến Độ Mục Tiêu</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container">
+                            <canvas id="targetChart"></canvas>
+                        </div>
+                        <div class="text-center mt-3">
+                            <div class="fw-bold fs-3" id="target-achievement">0%</div>
+                            <small>Đạt mục tiêu</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Thống kê tổng quan -->
+            <div class="col-md-6">
+                <div class="card animated-card h-100">
+                    <div class="card-header gradient-success text-white">
+                        <h4 class="mb-0 fw-bold">📊 Tổng Quan</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="stats-grid">
+                            <div class="stat-card">
+                                <div class="food-icon">🔥</div>
+                                <div class="stat-label">Calories Hôm Nay</div>
+                                <div class="stat-value" id="today-calories">0</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="food-icon">🎯</div>
+                                <div class="stat-label">Mục Tiêu</div>
+                                <div class="stat-value" id="target-calories">0</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="food-icon">⚡</div>
+                                <div class="stat-label">Còn Lại</div>
+                                <div class="stat-value" id="remaining-calories">0</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="food-icon">📅</div>
+                                <div class="stat-label">Tổng Bữa Ăn</div>
+                                <div class="stat-value" id="total-meals">0</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Biểu đồ loại món ăn -->
+            <div class="col-12">
+                <div class="card animated-card">
+                    <div class="card-header gradient-warning text-white">
+                        <h4 class="mb-0 fw-bold">🍽️ Phân Bổ Các Bữa</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container">
+                            <canvas id="mealTypeChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Gợi ý thông minh -->
+            <div class="col-12">
+                <div class="card animated-card">
+                    <div class="card-header gradient-info text-white">
+                        <h4 class="mb-0 fw-bold">💡 Phân Tích & Gợi ý</h4>
+                    </div>
+                    <div class="card-body">
+                        <div id="analysis-content">
+                            <div class="text-center py-3">
+                                <div class="spinner-border text-primary"></div>
+                                <p class="mt-2 text-muted">Đang phân tích dữ liệu...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let serverCurrentDate = '';
+
+        // Hàm lấy ngày hiện tại từ server
+        async function getServerCurrentDate() {
+            try {
+                const response = await fetch('/api/current_date');
+                const data = await response.json();
+                serverCurrentDate = data.current_date;
+                return serverCurrentDate;
+            } catch (error) {
+                console.error('Lỗi lấy ngày từ server:', error);
+                // Fallback to client date
+                serverCurrentDate = new Date().toISOString().split('T')[0];
+                return serverCurrentDate;
+            }
+        }
+
+        async function updateNavbar() {
+            const res = await fetch('/api/status');
+            const status = await res.json();
+            const authLink = document.getElementById('auth-link');
+            
+            document.querySelectorAll('.login-required').forEach(item => {
+                item.style.display = status.logged_in ? 'block' : 'none';
+            });
+
+            if (status.logged_in) {
+                authLink.textContent = '🚪 Đăng Xuất (' + status.username + ')';
+                authLink.href = '/api/logout';
+            } else {
+                authLink.textContent = '🔐 Đăng Nhập/Đăng Ký';
+                authLink.href = '/auth';
+            }
+            return status;
+        }
+
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Lấy ngày từ server đầu tiên
+            await getServerCurrentDate();
+            await updateNavbar();
+            initializeCharts();
+        });
+
+        let caloriesChart, targetChart, mealTypeChart;
+        let currentPeriod = 7;
+
+        function initializeCharts() {
+            // Khởi tạo biểu đồ calories
+            const caloriesCtx = document.getElementById('caloriesChart').getContext('2d');
+            caloriesChart = new Chart(caloriesCtx, {
+                type: 'bar',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Calories Tiêu Thụ',
+                        data: [],
+                        backgroundColor: '#4ecdc4',
+                        borderColor: '#44a08d',
+                        borderWidth: 2
+                    }, {
+                        label: 'Mục Tiêu',
+                        data: [],
+                        type: 'line',
+                        borderColor: '#667eea',
+                        borderWidth: 2,
+                        borderDash: [5, 5],
+                        fill: false,
+                        pointBackgroundColor: '#667eea'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `${context.dataset.label}: ${context.raw} kcal`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Calories (kcal)'
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Khởi tạo biểu đồ mục tiêu
+            const targetCtx = document.getElementById('targetChart').getContext('2d');
+            targetChart = new Chart(targetCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Đạt Mục Tiêu', 'Chưa Đạt'],
+                    datasets: [{
+                        data: [0, 100],
+                        backgroundColor: ['#4ecdc4', '#f8f9fa'],
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '70%',
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+
+            // Khởi tạo biểu đồ loại món ăn
+            const mealTypeCtx = document.getElementById('mealTypeChart').getContext('2d');
+            mealTypeChart = new Chart(mealTypeCtx, {
+                type: 'pie',
+                data: {
+                    labels: ['Sáng', 'Trưa', 'Tối', 'Phụ'],
+                    datasets: [{
+                        data: [25, 35, 30, 10],
+                        backgroundColor: ['#4facfe', '#f5576c', '#f093fb', '#4ecdc4'],
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+
+            // Sự kiện chọn khoảng thời gian
+            document.querySelectorAll('.period-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    currentPeriod = parseInt(this.dataset.period);
+                    loadChartData();
+                });
+            });
+
+            // Load dữ liệu ban đầu
+            loadChartData();
+        }
+
+        async function loadChartData() {
+            try {
+                const [logRes, profileRes] = await Promise.all([
+                    fetch('/api/food_log'),
+                    fetch('/api/profile')
+                ]);
+
+                if (!logRes.ok || !profileRes.ok) {
+                    throw new Error('Không thể load dữ liệu');
+                }
+
+                const foodLog = await logRes.json();
+                const profile = await profileRes.json();
+
+                if (!profile) {
+                    showError('Vui lòng cập nhật hồ sơ để xem phân tích');
+                    return;
+                }
+
+                // Phân tích dữ liệu thực tế - SỬA: Dùng serverCurrentDate
+                const analysis = analyzeRealData(foodLog, profile, currentPeriod);
+                
+                // Cập nhật biểu đồ
+                updateCharts(analysis, profile);
+                updateStats(analysis, profile);
+                updateAnalysisContent(analysis, profile);
+
+            } catch (error) {
+                console.error('Lỗi load chart data:', error);
+                showError('Lỗi tải dữ liệu: ' + error.message);
+            }
+        }
+
+        function analyzeRealData(foodLog, profile, days) {
+            // SỬA: Dùng serverCurrentDate làm ngày hiện tại
+            const now = new Date(serverCurrentDate);
+            const startDate = new Date(now.getTime() - (days - 1) * 24 * 60 * 60 * 1000);
+            
+            // Lọc dữ liệu theo khoảng thời gian
+            const filteredLog = foodLog.filter(item => {
+                const itemDate = new Date(item.date);
+                return itemDate >= startDate && itemDate <= now;
+            });
+
+            // Nhóm theo ngày
+            const dailyData = {};
+            const dateLabels = [];
+            const caloriesData = [];
+            const targetData = [];
+            
+            // Tạo dữ liệu cho mỗi ngày
+            for (let i = 0; i < days; i++) {
+                const date = new Date(now.getTime() - i * 24 * 60 * 60 * 1000);
+                const dateStr = date.toISOString().split('T')[0];
+                dateLabels.unshift(formatDate(date));
+                
+                const dayLog = filteredLog.filter(item => item.date === dateStr);
+                const dayCalories = dayLog.reduce((sum, item) => sum + (item.calories || 0), 0);
+                
+                caloriesData.unshift(dayCalories);
+                targetData.unshift(profile.target_calories);
+                
+                dailyData[dateStr] = {
+                    calories: dayCalories,
+                    meals: dayLog,
+                    date: dateStr
+                };
+            }
+
+            // Tính toán thống kê
+            const validCalories = caloriesData.filter(cal => cal > 0);
+            const avgCalories = validCalories.length > 0 ? 
+                Math.round(validCalories.reduce((a, b) => a + b, 0) / validCalories.length) : 0;
+            const maxCalories = validCalories.length > 0 ? Math.max(...validCalories) : 0;
+            const minCalories = validCalories.length > 0 ? Math.min(...validCalories) : 0;
+
+            // Phân loại món ăn
+            const mealTypes = analyzeMealTypes(filteredLog);
+
+            // Tính % đạt mục tiêu
+            const targetDays = caloriesData.filter(cal => cal <= profile.target_calories && cal > 0).length;
+            const totalDays = validCalories.length;
+            const achievementRate = totalDays > 0 ? Math.round((targetDays / totalDays) * 100) : 0;
+
+            return {
+                dailyData,
+                dateLabels,
+                caloriesData,
+                targetData,
+                avgCalories,
+                maxCalories,
+                minCalories,
+                mealTypes,
+                achievementRate,
+                totalMeals: filteredLog.length,
+                // SỬA: Dùng serverCurrentDate để lấy calories hôm nay
+                todayCalories: dailyData[serverCurrentDate]?.calories || 0
+            };
+        }
+
+        function analyzeMealTypes(foodLog) {
+            const types = { 'Sáng': 0, 'Trưa': 0, 'Tối': 0, 'Phụ': 0 };
+            
+            foodLog.forEach(meal => {
+                const mealName = meal.meal_name.toLowerCase();
+                const mealTime = meal.timestamp ? new Date(meal.timestamp).getHours() : 12;
+                
+                if (mealTime >= 5 && mealTime < 11) types['Sáng']++;
+                else if (mealTime >= 11 && mealTime < 14) types['Trưa']++;
+                else if (mealTime >= 17 && mealTime < 22) types['Tối']++;
+                else types['Phụ']++;
+            });
+
+            return types;
+        }
+
+        function formatDate(date) {
+            return date.toLocaleDateString('vi-VN', { 
+                day: '2-digit', 
+                month: '2-digit' 
+            });
+        }
+
+        function updateCharts(analysis, profile) {
+            // Cập nhật biểu đồ calories
+            caloriesChart.data.labels = analysis.dateLabels;
+            caloriesChart.data.datasets[0].data = analysis.caloriesData;
+            caloriesChart.data.datasets[1].data = analysis.targetData;
+            caloriesChart.update();
+
+            // Cập nhật biểu đồ mục tiêu
+            targetChart.data.datasets[0].data = [
+                analysis.achievementRate,
+                100 - analysis.achievementRate
+            ];
+            targetChart.update();
+
+            // Cập nhật biểu đồ loại món ăn
+            mealTypeChart.data.datasets[0].data = [
+                analysis.mealTypes['Sáng'],
+                analysis.mealTypes['Trưa'],
+                analysis.mealTypes['Tối'],
+                analysis.mealTypes['Phụ']
+            ];
+            mealTypeChart.update();
+
+            // Cập nhật thống kê
+            document.getElementById('avg-calories').textContent = analysis.avgCalories;
+            document.getElementById('max-calories').textContent = analysis.maxCalories;
+            document.getElementById('min-calories').textContent = analysis.minCalories;
+            document.getElementById('target-achievement').textContent = analysis.achievementRate + '%';
+        }
+
+        function updateStats(analysis, profile) {
+            const remaining = profile.target_calories - analysis.todayCalories;
+            
+            document.getElementById('today-calories').textContent = analysis.todayCalories;
+            document.getElementById('target-calories').textContent = profile.target_calories;
+            document.getElementById('remaining-calories').textContent = remaining;
+            document.getElementById('total-meals').textContent = analysis.totalMeals;
+
+            // Đổi màu remaining calories
+            const remainingElement = document.getElementById('remaining-calories');
+            remainingElement.className = 'stat-value ' + 
+                (remaining < 0 ? 'text-danger' : 
+                 remaining > 500 ? 'text-info' : 'text-warning');
+        }
+
+        function updateAnalysisContent(analysis, profile) {
+            let content = '';
+            const goal = profile.goal;
+            const todayRemaining = profile.target_calories - analysis.todayCalories;
+
+            // Phân tích tổng quan
+            content += `<div class="alert alert-info">
+                <h6>📊 Tổng Quan ${currentPeriod} Ngày Qua</h6>
+                <p>Bạn đã ăn trung bình <strong>${analysis.avgCalories} kcal/ngày</strong>, 
+                ${analysis.achievementRate}% ngày đạt mục tiêu.</p>
+            </div>`;
+
+            // Phân tích theo mục tiêu
+            if (goal === 'giảm cân') {
+                if (analysis.avgCalories > profile.target_calories + 200) {
+                    content += `<div class="alert alert-warning">
+                        <h6>⚠️ Cần Chú Ý</h6>
+                        <p>Lượng calories trung bình cao hơn mục tiêu. Thử giảm khẩu phần tinh bột và tăng cường rau xanh.</p>
+                    </div>`;
+                } else if (analysis.avgCalories <= profile.target_calories) {
+                    content += `<div class="alert alert-success">
+                        <h6>🎉 Xuất Sắc!</h6>
+                        <p>Bạn đang kiểm soát calories rất tốt! Tiếp tục duy trì để đạt mục tiêu giảm cân.</p>
+                    </div>`;
+                }
+            }
+
+            // Phân tích hôm nay
+            if (todayRemaining < -300) {
+                content += `<div class="alert alert-danger">
+                    <h6>🍽️ Hôm Nay</h6>
+                    <p>Bạn đã ăn vượt ${Math.abs(todayRemaining)}kcal. Bữa tối nên chọn món nhẹ nhàng.</p>
+                </div>`;
+            } else if (todayRemaining > 0) {
+                content += `<div class="alert alert-success">
+                    <h6>🍽️ Hôm Nay</h6>
+                    <p>Còn ${todayRemaining}kcal. Bạn có thể ăn thêm bữa phụ lành mạnh.</p>
+                </div>`;
+            }
+
+            // Gợi ý cải thiện
+            if (analysis.mealTypes['Phụ'] === 0 && analysis.totalMeals > 10) {
+                content += `<div class="alert alert-info">
+                    <h6>💡 Mẹo Dinh Dưỡng</h6>
+                    <p>Thử thêm bữa phụ lành mạnh (trái cây, sữa chua) để duy trì năng lượng ổn định.</p>
+                </div>`;
+            }
+
+            document.getElementById('analysis-content').innerHTML = content;
+        }
+
+        function showError(message) {
+            document.getElementById('analysis-content').innerHTML = `
+                <div class="alert alert-danger text-center">
+                    ❌ ${message}
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>

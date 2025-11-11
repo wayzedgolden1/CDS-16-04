@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/style.css" rel="stylesheet">
+    <title>Nhật Ký Ăn Uống - AI Advisor</title>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="/">🍎 AI Food Advisor</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="/">🏠 Trang Chủ</a></li>
+                    <li class="nav-item login-required"><a class="nav-link" href="/profile">👤 Hồ Sơ</a></li>
+                    <li class="nav-item login-required"><a class="nav-link" href="/chart">📊 Biểu Đồ</a></li>
+                    <li class="nav-item login-required"><a class="nav-link active fw-bold" href="/log">📝 Nhật Ký</a></li>
+                    <li class="nav-item" id="auth-nav-item"><a class="nav-link" href="/auth" id="auth-link">🔐 Đăng Nhập/Đăng Ký</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container my-5">
+        <h1 class="mb-4 text-center text-white fw-bold fade-in">📝 Nhật Ký Ăn Uống</h1>
+        
+        <div class="row g-4">
+            <!-- Lịch -->
+            <div class="col-lg-4">
+                <div class="card animated-card">
+                    <div class="card-header gradient-food text-white">
+                        <h4 class="mb-0 fw-bold">📅 Lịch Ăn Uống</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="calendar-container">
+                            <div class="calendar-header">
+                                <button class="calendar-nav-btn" id="prev-month">‹</button>
+                                <h5 class="mb-0" id="current-month">Tháng 11, 2025</h5>
+                                <button class="calendar-nav-btn" id="next-month">›</button>
+                            </div>
+                            <div class="calendar-grid" id="calendar-grid">
+                                <!-- Calendar sẽ được render bằng JavaScript -->
+                            </div>
+                        </div>
+                        
+                        <!-- Nút thêm món ăn -->
+                        <div class="mt-4">
+                            <button class="btn btn-success w-100 fw-bold py-2" data-bs-toggle="modal" data-bs-target="#addMealModal">
+                                ➕ Thêm Món Ăn
+                            </button>
+                        </div>
+
+                        <!-- Thống kê nhanh -->
+                        <div class="mt-4">
+                            <div class="nutrition-fact">
+                                <h6 class="fw-bold">📊 Hôm Nay</h6>
+                                <div class="row text-center">
+                                    <div class="col-6">
+                                        <div class="fw-bold text-primary" id="today-total-calories">0</div>
+                                        <small>Calories</small>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="fw-bold text-success" id="today-meal-count">0</div>
+                                        <small>Bữa ăn</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Danh sách món ăn -->
+            <div class="col-lg-8">
+                <div class="card animated-card">
+                    <div class="card-header gradient-primary text-white d-flex justify-content-between align-items-center">
+                        <h4 class="mb-0 fw-bold" id="selected-date-title">🍽️ Bữa Ăn Hôm Nay</h4>
+                        <button class="btn btn-light btn-sm fw-bold" onclick="loadFoodLog()">
+                            🔄 Làm mới
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <div id="log-details">
+                            <div class="text-center py-4">
+                                <div class="spinner-border text-primary mb-3"></div>
+                                <p class="text-muted">Đang tải nhật ký...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal thêm món ăn -->
+    <div class="modal fade" id="addMealModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header gradient-success text-white">
+                    <h5 class="modal-title fw-bold">➕ Thêm Món Ăn Mới</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="add-meal-form">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">📅 Ngày ăn</label>
+                            <input type="date" class="form-control" id="meal-date" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">🕒 Giờ ăn</label>
+                            <input type="time" class="form-control" id="meal-time" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">📸 Ảnh món ăn</label>
+                            <input type="file" class="form-control" id="meal-photo" accept="image/*" required>
+                            <div class="form-text">Chụp ảnh món ăn để AI phân tích calories tự động</div>
+                        </div>
+                        <div class="text-center mb-3">
+                            <img id="meal-preview" src="#" alt="Preview" style="max-width: 100%; max-height: 200px; display: none; border-radius: 10px;">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="button" class="btn btn-success fw-bold" onclick="addNewMeal()">
+                        <span id="add-meal-text">🔍 Phân tích & Thêm</span>
+                        <div id="add-meal-spinner" class="loading-spinner d-none"></div>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let currentDate = new Date();
+        let selectedDate = new Date().toISOString().split('T')[0];
+        let foodLog = [];
+        let serverCurrentDate = '';
+
+        // Hàm lấy ngày hiện tại từ server
+        async function getServerCurrentDate() {
+            try {
+                const response = await fetch('/api/current_date');
+                const data = await response.json();
+                serverCurrentDate = data.current_date;
+                return serverCurrentDate;
+            } catch (error) {
+                console.error('Lỗi lấy ngày từ server:', error);
+                // Fallback to client date
+                serverCurrentDate = new Date().toISOString().split('T')[0];
+                return serverCurrentDate;
+            }
+        }
+
+        async function updateNavbar() {
+            const res = await fetch('/api/status');
+            const status = await res.json();
+            const authLink = document.getElementById('auth-link');
+            
+            document.querySelectorAll('.login-required').forEach(item => {
+                item.style.display = status.logged_in ? 'block' : 'none';
+            });
+
+            if (status.logged_in) {
+                authLink.textContent = '🚪 Đăng Xuất (' + status.username + ')';
+                authLink.href = '/api/logout';
+            } else {
+                authLink.textContent = '🔐 Đăng Nhập/Đăng Ký';
+                authLink.href = '/auth';
+            }
+            return status;
+        }
+
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Lấy ngày từ server đầu tiên
+            await getServerCurrentDate();
+            await updateNavbar();
+            initializeCalendar();
+            loadFoodLog();
+            
+            // Thêm sự kiện khi modal được mở
+            const addMealModal = document.getElementById('addMealModal');
+            if (addMealModal) {
+                addMealModal.addEventListener('show.bs.modal', function() {
+                    // Khi modal mở, cập nhật ngày thành ngày đang chọn
+                    updateMealFormDate();
+                });
+            }
+        });
+
+        function initializeCalendar() {
+            // SỬA: Dùng serverCurrentDate làm ngày mặc định
+            selectedDate = serverCurrentDate;
+            
+            updateCalendar();
+            
+            // Sự kiện nút chuyển tháng
+            document.getElementById('prev-month').addEventListener('click', () => {
+                currentDate.setMonth(currentDate.getMonth() - 1);
+                updateCalendar();
+            });
+            
+            document.getElementById('next-month').addEventListener('click', () => {
+                currentDate.setMonth(currentDate.getMonth() + 1);
+                updateCalendar();
+            });
+
+            // Preview ảnh
+            document.getElementById('meal-photo').addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                const preview = document.getElementById('meal-preview');
+                
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        preview.src = e.target.result;
+                        preview.style.display = 'block';
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    preview.style.display = 'none';
+                }
+            });
+
+            // Set ngày mặc định - SỬA: luôn dùng selectedDate
+            updateMealFormDate();
+        }
+
+        // Hàm cập nhật ngày trong form thêm món ăn
+        function updateMealFormDate() {
+            document.getElementById('meal-date').value = selectedDate;
+            document.getElementById('meal-time').value = new Date().toTimeString().substring(0, 5);
+        }
+
+        function updateCalendar() {
+            const monthNames = ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6",
+                              "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"];
+            
+            document.getElementById('current-month').textContent = 
+                `${monthNames[currentDate.getMonth()]}, ${currentDate.getFullYear()}`;
+            
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth();
+            
+            // Ngày đầu tiên của tháng
+            const firstDay = new Date(year, month, 1);
+            // Ngày cuối cùng của tháng
+            const lastDay = new Date(year, month + 1, 0);
+            // Ngày bắt đầu (thứ 2 = 1, Chủ nhật = 0)
+            const startingDay = firstDay.getDay();
+            // Điều chỉnh để thứ 2 là ngày đầu tuần
+            const adjustedStart = startingDay === 0 ? 6 : startingDay - 1;
+            const daysInMonth = lastDay.getDate();
+            
+            const grid = document.getElementById('calendar-grid');
+            let calendarHTML = '';
+            
+            // Thêm header - 7 ngày trong tuần
+            const daysOfWeek = ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN'];
+            daysOfWeek.forEach(day => {
+                calendarHTML += `<div class="calendar-day-header">${day}</div>`;
+            });
+            
+            let dayCount = 1;
+            
+            // Tạo 6 hàng (6 tuần) - tổng 42 ô
+            for (let week = 0; week < 6; week++) {
+                for (let dayOfWeek = 0; dayOfWeek < 7; dayOfWeek++) {
+                    const cellIndex = week * 7 + dayOfWeek;
+                    
+                    if (cellIndex < adjustedStart || dayCount > daysInMonth) {
+                        // Ô trống (trước ngày đầu tháng hoặc sau ngày cuối tháng)
+                        calendarHTML += `<div class="calendar-day other-month"></div>`;
+                    } else {
+                        // Ngày trong tháng
+                        const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(dayCount).padStart(2, '0')}`;
+                        const hasMeals = foodLog.some(meal => meal.date === dateStr);
+                        const isSelected = dateStr === selectedDate;
+                        // SỬA: Dùng serverCurrentDate để xác định ngày hôm nay
+                        const isToday = dateStr === serverCurrentDate;
+                        
+                        let dayClass = 'calendar-day';
+                        if (isSelected) dayClass += ' active';
+                        if (hasMeals) dayClass += ' has-meals';
+                        if (isToday) dayClass += ' today';
+                        
+                        calendarHTML += `<div class="${dayClass}" data-date="${dateStr}">${dayCount}</div>`;
+                        dayCount++;
+                    }
+                }
+            }
+            
+            grid.innerHTML = calendarHTML;
+            
+            // Thêm sự kiện click cho các ngày
+            document.querySelectorAll('.calendar-day[data-date]').forEach(day => {
+                day.addEventListener('click', function() {
+                    selectedDate = this.dataset.date;
+                    updateCalendar();
+                    loadFoodLog();
+                    // QUAN TRỌNG: Cập nhật ngày trong form khi chọn ngày mới
+                    updateMealFormDate();
+                });
+            });
+        }
+
+        async function loadFoodLog() {
+            try {
+                const res = await fetch('/api/food_log');
+                if (!res.ok) throw new Error('Không thể tải nhật ký');
+                
+                foodLog = await res.json();
+                displayFoodLog();
+                updateCalendar();
+                updateTodayStats();
+                
+            } catch (error) {
+                console.error('Lỗi load food log:', error);
+                document.getElementById('log-details').innerHTML = `
+                    <div class="alert alert-danger text-center">
+                        ❌ Lỗi tải nhật ký: ${error.message}
+                    </div>
+                `;
+            }
+        }
+
+        function displayFoodLog() {
+            const selectedLog = foodLog.filter(meal => meal.date === selectedDate);
+            const logDiv = document.getElementById('log-details');
+            
+            // Cập nhật tiêu đề - SỬA: dùng serverCurrentDate
+            const dateObj = new Date(selectedDate);
+            const today = serverCurrentDate;
+            const title = selectedDate === today ? '🍽️ Bữa Ăn Hôm Nay' : 
+                         `🍽️ Bữa Ăn Ngày ${dateObj.toLocaleDateString('vi-VN')}`;
+            document.getElementById('selected-date-title').textContent = title;
+            
+            if (selectedLog.length === 0) {
+                logDiv.innerHTML = `
+                    <div class="alert alert-warning text-center animated-card">
+                        <h5>🍃 Chưa có bữa ăn nào!</h5>
+                        <p class="mb-3">Hãy thêm món ăn đầu tiên cho ngày này.</p>
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addMealModal">
+                            ➕ Thêm Món Ăn
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+
+            // Nhóm theo bữa ăn dựa trên thời gian
+            const mealsByTime = {
+                'Sáng': [],
+                'Trưa': [],
+                'Tối': [],
+                'Phụ': []
+            };
+
+            selectedLog.forEach(meal => {
+                const mealTime = meal.timestamp ? new Date(meal.timestamp).getHours() : 12;
+                let timeCategory = 'Phụ';
+                
+                if (mealTime >= 5 && mealTime < 11) timeCategory = 'Sáng';
+                else if (mealTime >= 11 && mealTime < 14) timeCategory = 'Trưa';
+                else if (mealTime >= 17 && mealTime < 22) timeCategory = 'Tối';
+                
+                mealsByTime[timeCategory].push(meal);
+            });
+
+            let html = '';
+            const totalCalories = selectedLog.reduce((sum, meal) => sum + (meal.calories || 0), 0);
+
+            // Hiển thị tổng calories
+            html += `
+                <div class="alert gradient-info text-white text-center mb-4">
+                    <h6 class="mb-1">📊 Tổng Calories</h6>
+                    <div class="fw-bold fs-3">${totalCalories} kcal</div>
+                </div>
+            `;
+
+            // Hiển thị từng bữa ăn
+            for (const [timeCategory, meals] of Object.entries(mealsByTime)) {
+                if (meals.length > 0) {
+                    html += `<h6 class="mt-4 mb-3 text-primary">🕒 ${timeCategory}</h6>`;
+                    
+                    meals.forEach(meal => {
+                        const time = meal.timestamp ? 
+                            new Date(meal.timestamp).toLocaleTimeString('vi-VN', { 
+                                hour: '2-digit', 
+                                minute: '2-digit' 
+                            }) : '--:--';
+                        
+                        html += `
+                            <div class="card meal-card mb-3 fade-in">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-start">
+                                        <div class="flex-grow-1">
+                                            <h6 class="card-title text-primary mb-1">${meal.meal_name}</h6>
+                                            <p class="card-text text-muted small mb-2">${meal.description}</p>
+                                            <div class="d-flex gap-2 align-items-center">
+                                                <span class="badge calorie-badge gradient-warning text-dark">
+                                                    🔥 ${meal.calories} kcal
+                                                </span>
+                                                <small class="text-muted">⏰ ${time}</small>
+                                            </div>
+                                        </div>
+                                        <button class="btn btn-outline-danger btn-sm delete-meal" 
+                                                data-timestamp="${meal.timestamp}" 
+                                                title="Xóa bữa ăn">
+                                            🗑️
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    });
+                }
+            }
+
+            logDiv.innerHTML = html;
+
+            // Thêm sự kiện xóa
+            document.querySelectorAll('.delete-meal').forEach(btn => {
+                btn.addEventListener('click', async function() {
+                    const timestamp = this.dataset.timestamp;
+                    if (confirm('Bạn có chắc muốn xóa bữa ăn này?')) {
+                        await deleteMeal(timestamp);
+                    }
+                });
+            });
+        }
+
+        function updateTodayStats() {
+            // SỬA: Dùng serverCurrentDate
+            const today = serverCurrentDate;
+            const todayLog = foodLog.filter(meal => meal.date === today);
+            const todayCalories = todayLog.reduce((sum, meal) => sum + (meal.calories || 0), 0);
+            
+            document.getElementById('today-total-calories').textContent = todayCalories;
+            document.getElementById('today-meal-count').textContent = todayLog.length;
+        }
+
+        async function addNewMeal() {
+            const mealDate = document.getElementById('meal-date').value;
+            const mealTime = document.getElementById('meal-time').value;
+            const photoInput = document.getElementById('meal-photo');
+            
+            if (!photoInput.files.length) {
+                alert('📸 Vui lòng chọn ảnh món ăn!');
+                return;
+            }
+
+            const addText = document.getElementById('add-meal-text');
+            const addSpinner = document.getElementById('add-meal-spinner');
+            
+            addText.textContent = 'Đang phân tích...';
+            addSpinner.classList.remove('d-none');
+
+            try {
+                const formData = new FormData();
+                formData.append('photo', photoInput.files[0]);
+                formData.append('date', mealDate);
+                formData.append('time', mealTime);
+
+                const response = await fetch('/api/log_meal', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    // Đóng modal và reset form
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('addMealModal'));
+                    modal.hide();
+                    document.getElementById('add-meal-form').reset();
+                    document.getElementById('meal-preview').style.display = 'none';
+                    
+                    // Reload dữ liệu
+                    await loadFoodLog();
+                    
+                    // Thông báo thành công
+                    alert('✅ Đã thêm món ăn thành công!');
+                } else {
+                    alert('❌ Lỗi: ' + (result.error || 'Không thể thêm món ăn'));
+                }
+
+            } catch (error) {
+                alert('❌ Lỗi kết nối: ' + error.message);
+            } finally {
+                addText.textContent = '🔍 Phân tích & Thêm';
+                addSpinner.classList.add('d-none');
+            }
+        }
+
+        async function deleteMeal(timestamp) {
+            try {
+                const response = await fetch('/api/delete_meal', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ timestamp: timestamp })
+                });
+
+                if (response.ok) {
+                    await loadFoodLog();
+                } else {
+                    alert('❌ Lỗi khi xóa bữa ăn');
+                }
+            } catch (error) {
+                alert('❌ Lỗi kết nối: ' + error.message);
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/style.css" rel="stylesheet">
+    <title>Hồ sơ cá nhân - AI Advisor</title>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark gradient-success">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="/">🥗 AI Food Advisor</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="/">🏠 Trang Chủ</a></li>
+                    <li class="nav-item login-required"><a class="nav-link active fw-bold" href="/profile">👤 Hồ Sơ</a></li>
+                    <li class="nav-item login-required"><a class="nav-link" href="/chart">📊 Biểu Đồ</a></li>
+                    <li class="nav-item login-required"><a class="nav-link" href="/log">📝 Nhật Ký</a></li>
+                    <li class="nav-item" id="auth-nav-item"><a class="nav-link" href="/auth" id="auth-link">🔐 Đăng Nhập/Đăng Ký</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container my-5">
+        <h1 class="mb-4 text-center text-white fw-bold fade-in">👤 Quản lý Hồ sơ Cá nhân</h1>
+        <div class="row justify-content-center">
+            <div class="col-md-10 col-lg-8">
+                <div class="card animated-card shadow">
+                    <div class="card-header gradient-primary text-white">
+                        <h4 class="mb-0 fw-bold">📊 Thông tin cá nhân</h4>
+                    </div>
+                    <div class="card-body">
+                        <div id="profile-instruction" class="alert alert-info text-center">
+                            Đang tải trạng thái Hồ sơ...
+                        </div>
+                        
+                        <form id="profile-form">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">👤 Tên đầy đủ</label>
+                                    <input type="text" id="name" class="form-control" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">⚤ Giới tính</label>
+                                    <select id="gender" class="form-select" required>
+                                        <option value="">Chọn giới tính...</option>
+                                        <option value="nam">Nam</option>
+                                        <option value="nữ">Nữ</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="col-md-4">
+                                    <label class="form-label fw-bold">🎂 Tuổi</label>
+                                    <input type="number" id="age" class="form-control" min="1" max="120" required>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label fw-bold">📏 Chiều cao (cm)</label>
+                                    <input type="number" id="height_cm" class="form-control" min="50" max="250" required>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label fw-bold">⚖️ Cân nặng (kg)</label>
+                                    <input type="number" id="weight_kg" class="form-control" min="20" max="300" required>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">🎯 Mục tiêu cá nhân</label>
+                                    <select id="goal" class="form-select" required>
+                                        <option value="">Chọn mục tiêu...</option>
+                                        <option value="giữ cân">🔄 Giữ cân</option>
+                                        <option value="giảm cân">⬇️ Giảm cân</option>
+                                        <option value="tăng cân">⬆️ Tăng cân</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">🏃 Mức độ hoạt động</label>
+                                    <select id="activity_level" class="form-select" required>
+                                        <option value="">Chọn mức độ...</option>
+                                        <option value="ít">🛋️ Ít (Ít vận động)</option>
+                                        <option value="bình thường">🚶 Bình thường</option>
+                                        <option value="nhiều">🏃 Nhiều (Tập luyện hàng ngày)</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-success w-100 mt-4 fw-bold py-2">
+                                💾 Lưu & Cập nhật Hồ sơ
+                            </button>
+                            <div id="profile-status" class="mt-3 text-center fw-bold"></div>
+                        </form>
+                        
+                        <div id="profile-info" class="mt-4 border-top pt-4"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        async function updateNavbar() {
+            const res = await fetch('/api/status');
+            const status = await res.json();
+            const authLink = document.getElementById('auth-link');
+            
+            document.querySelectorAll('.login-required').forEach(item => {
+                item.style.display = status.logged_in ? 'block' : 'none';
+            });
+
+            if (status.logged_in) {
+                authLink.textContent = '🚪 Đăng Xuất (' + status.username + ')';
+                authLink.href = '/api/logout';
+            } else {
+                authLink.textContent = '🔐 Đăng Nhập/Đăng Ký';
+                authLink.href = '/auth';
+            }
+            return status;
+        }
+
+        document.addEventListener('DOMContentLoaded', updateNavbar);
+    </script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', loadProfile);
+
+        async function loadProfile() {
+            const status = await updateNavbar();
+            if (!status.logged_in) return; 
+
+            const res = await fetch('/api/profile');
+            const data = await res.json();
+            const inst = document.getElementById('profile-instruction');
+
+            if (res.ok && data) {
+                inst.className = 'alert alert-success text-center animated-card';
+                inst.innerHTML = `🎉 <strong>Chào mừng, ${data.name}!</strong> Hồ sơ đã được lưu. Bạn có muốn chỉnh sửa không?`;
+                displayProfile(data);
+                // Điền dữ liệu vào form
+                for (const key in data) {
+                    const input = document.getElementById(key);
+                    if (input) input.value = data[key];
+                }
+            } else {
+                inst.className = 'alert alert-warning text-center animated-card';
+                inst.innerHTML = `👋 <strong>Chào ${status.username}!</strong> Vui lòng nhập Hồ sơ cá nhân của bạn lần đầu tiên!`;
+            }
+        }
+
+        function displayProfile(profile) {
+            const infoDiv = document.getElementById('profile-info');
+            infoDiv.innerHTML = `
+                <div class="fade-in">
+                    <h4 class="text-primary mb-3">📈 Kết quả tính toán dinh dưỡng</h4>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="card bg-light animated-card">
+                                <div class="card-body text-center">
+                                    <h6 class="card-title">🎯 Mục tiêu</h6>
+                                    <p class="fs-5 fw-bold text-success">${profile.goal.toUpperCase()}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card bg-light animated-card">
+                                <div class="card-body text-center">
+                                    <h6 class="card-title">🔥 Calories Mục tiêu</h6>
+                                    <p class="fs-5 fw-bold text-danger">${profile.target_calories} kcal</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card bg-light animated-card">
+                                <div class="card-body text-center">
+                                    <h6 class="card-title">⚡ TDEE (Nhu cầu)</h6>
+                                    <p class="fs-5 fw-bold text-primary">${profile.tdee} kcal</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card bg-light animated-card">
+                                <div class="card-body text-center">
+                                    <h6 class="card-title">🏃 Hoạt động</h6>
+                                    <p class="fs-5 fw-bold text-info">${profile.activity_level}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        document.getElementById('profile-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const form = e.target;
+            const data = {
+                name: form.name.value, 
+                gender: form.gender.value, 
+                age: parseInt(form.age.value) || 0, 
+                height_cm: parseFloat(form.height_cm.value) || 0, 
+                weight_kg: parseFloat(form.weight_kg.value) || 0, 
+                goal: form.goal.value, 
+                activity_level: form.activity_level.value,
+            };
+
+            const statusP = document.getElementById('profile-status');
+            const response = await fetch('/api/profile', {
+                method: 'POST', 
+                headers: { 'Content-Type': 'application/json' }, 
+                body: JSON.stringify(data),
+            });
+            const result = await response.json();
+            
+            if (response.ok) {
+                statusP.className = 'text-success fw-bold';
+                statusP.innerHTML = `✅ ${result.message} (Mục tiêu: <span class="text-danger">${result.profile.target_calories} kcal</span>)`;
+                displayProfile(result.profile);
+                updateNavbar();
+            } else {
+                statusP.className = 'text-danger fw-bold';
+                statusP.textContent = '❌ Lỗi: ' + result.error;
+            }
+        });
+    </script>
+</body>
+</html>
